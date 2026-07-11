@@ -1,0 +1,12 @@
+# Always revalidate JS/CSS so deploys show up immediately
+# (combined with the ?v= cache-busters in *.html).
+/common.js
+  Cache-Control: public, max-age=0, must-revalidate
+/app-list.js
+  Cache-Control: public, max-age=0, must-revalidate
+/app-create.js
+  Cache-Control: public, max-age=0, must-revalidate
+/app-view.js
+  Cache-Control: public, max-age=0, must-revalidate
+/styles.css
+  Cache-Control: public, max-age=0, must-revalidate

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Make a group card</title>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Make a group card">
+  <meta property="og:description" content="Make a group greeting card everyone can sign — messages, photos, doodles and GIFs, wrapped up in a flip-book card.">
+  <meta property="og:url" content="/new">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="/assets/unicorn.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;700&family=Caveat:wght@500;600&family=Shadows+Into+Light&family=Homemade+Apple&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260710a">
+  <script type="module" src="app-create.js?v=20260707g"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <h1>Make a card</h1>
+      <p class="sub">A card everyone can sign — with handwritten notes, photos, doodles and GIFs — served up as a little flip-book.</p>
+      <div class="rule"></div>
+    </header>
+
+    <!-- Create form -->
+    <section class="panel" id="create-panel">
+      <h2>Start a card</h2>
+      <p class="hint">A few quick things. You&rsquo;ll get a link to share in the next step — no accounts, ever.</p>
+
+      <div class="field">
+        <label for="cover-input">Cover photo <span style="font-weight:400;color:var(--ink-soft)">(optional, but lovely)</span></label>
+        <div class="cover-drop" id="cover-drop" tabindex="0" role="button" aria-label="Choose a cover photo">
+          <svg class="cover-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="10" width="36" height="28" rx="3"/>
+            <circle cx="17" cy="20" r="3.5"/>
+            <path d="M6 33l10-9 8 7 7-6 11 9"/>
+          </svg>
+          <span class="cover-cta" id="cover-cta">Tap to choose a photo of the guest of honor</span>
+        </div>
+        <input type="file" id="cover-input" accept="image/*" hidden>
+        <p class="note">Big photos are shrunk down automatically — straight off your phone is fine.</p>
+      </div>
+
+      <div class="field">
+        <label for="title-input">Card title</label>
+        <input type="text" id="title-input" maxlength="120" placeholder="Happy Birthday!" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label for="recipient-input">Who is it for?</label>
+        <input type="text" id="recipient-input" maxlength="120" placeholder="e.g. Alex" autocomplete="off">
+        <p class="note">Shown on the cover, e.g. &ldquo;for Alex&rdquo;. Leave blank to skip.</p>
+      </div>
+
+      <div class="field">
+        <label class="check-row"><input type="checkbox" id="private-input"> Private card</label>
+        <p class="note">Private cards don&rsquo;t show up on the <a href="./">cards gallery</a> — only people with the link can open them.</p>
+      </div>
+
+      <div class="error-msg hidden" id="create-error"></div>
+
+      <button class="btn" id="create-btn">Create the card</button>
+    </section>
+
+    <!-- Success: the two links -->
+    <section class="panel hidden" id="links-panel">
+      <h2>Your card is ready</h2>
+      <p class="hint">Two links, two jobs. Copy each one where it needs to go.</p>
+
+      <div class="link-row">
+        <div class="link-info">
+          <div class="link-name">&#128140; Share link — send to friends &amp; family</div>
+          <div class="link-desc">Anyone with this link can open the card and add their own note.</div>
+          <div class="link-url" id="share-url"></div>
+        </div>
+        <button class="copy-btn" id="copy-share">Copy</button>
+      </div>
+
+      <div class="link-row">
+        <div class="link-info">
+          <div class="link-name">&#128273; Your admin link — keep this one for yourself</div>
+          <div class="link-desc">Lets you fix typos, remove notes, make the card private, and find these links again.</div>
+          <div class="link-url" id="admin-url"></div>
+        </div>
+        <button class="copy-btn" id="copy-admin">Copy</button>
+      </div>
+
+      <div class="keep-safe">The admin link is the only way to manage your card &mdash; there are no accounts. Paste it somewhere safe (a note to yourself works great).</div>
+      <a class="btn btn-quiet" id="open-card-link" href="#" style="margin-top:16px">Open your card &rarr;</a>
+    </section>
+
+    <p class="footer-note"><a href="./">All cards</a> &mdash; free, for friends</p>
+  </main>
+</body>
+</html>

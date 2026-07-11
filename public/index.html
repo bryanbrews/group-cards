@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group Cards — cards made together</title>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Group Cards">
+  <meta property="og:description" content="Group greeting cards everyone can sign — messages, photos, doodles and GIFs, wrapped up in little flip-books.">
+  <meta property="og:url" content="/">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="/assets/unicorn.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260710a">
+  <script type="module" src="app-list.js?v=20260707g"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <h1>Group Cards</h1>
+      <p class="sub">Cards made together — handwritten notes, photos, doodles and GIFs, wrapped up as little flip-books. Open one, add your note.</p>
+      <div class="rule"></div>
+      <a class="btn" id="make-btn" href="new" style="margin-top:18px">Make a card</a>
+    </header>
+
+    <div class="error-msg hidden" id="page-error"></div>
+
+    <!-- Cards made on this device (may include private ones) -->
+    <section class="hidden" id="mine-section">
+      <h2 class="gallery-heading">Your cards</h2>
+      <div class="gallery-grid" id="mine-grid"></div>
+    </section>
+
+    <!-- Public gallery -->
+    <section id="all-section">
+      <h2 class="gallery-heading" id="all-heading">All cards</h2>
+      <div class="gallery-grid" id="all-grid"></div>
+      <p class="hint hidden" id="empty-note" style="text-align:center">No cards yet — yours could be the first.</p>
+    </section>
+
+    <p class="footer-note">Group Cards &mdash; free, for friends</p>
+  </main>
+</body>
+</html>

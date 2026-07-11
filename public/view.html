@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A card for you</title>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="A card for you">
+  <meta property="og:description" content="Open the group card — and add your own note while you're there.">
+  <meta name="twitter:card" content="summary">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/assets/unicorn.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;700&family=Caveat:wght@500;600&family=Shadows+Into+Light&family=Homemade+Apple&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260710a">
+  <script type="module" src="app-view.js?v=20260710a"></script>
+</head>
+<body>
+  <main class="shell">
+    <div class="error-msg hidden" id="page-error"></div>
+
+    <!-- Admin bar (only when opened with the admin link) -->
+    <div class="admin-bar hidden no-print" id="admin-bar">
+      <span class="grow">&#128273; You&rsquo;re the organizer of this card.</span>
+      <button class="btn btn-quiet btn-small" id="admin-toggle">Organizer tools</button>
+    </div>
+
+    <!-- Admin panel -->
+    <section class="panel hidden no-print admin-panel" id="admin-panel">
+      <h2>Organizer tools</h2>
+
+      <div class="field">
+        <label for="admin-title">Card title</label>
+        <input type="text" id="admin-title" maxlength="120">
+      </div>
+      <div class="field">
+        <label for="admin-recipient">Recipient name</label>
+        <input type="text" id="admin-recipient" maxlength="120">
+      </div>
+      <button class="btn btn-small" id="admin-save">Save changes</button>
+      <div class="error-msg hidden" id="admin-error"></div>
+
+      <div class="field" style="margin-top:22px">
+        <label class="check-row"><input type="checkbox" id="admin-private"> Private card</label>
+        <p class="note">Private cards don&rsquo;t show up on the <a href="./">cards gallery</a> — only people with a link can open them. Takes effect immediately.</p>
+      </div>
+
+      <h2 style="margin-top:28px">Links</h2>
+      <div class="link-row">
+        <div class="link-info">
+          <div class="link-name">&#128140; Share link — anyone with it can open the card and add to it</div>
+          <div class="link-url" id="admin-share-url"></div>
+        </div>
+        <button class="copy-btn" id="admin-copy-share">Copy</button>
+      </div>
+      <div class="link-row">
+        <div class="link-info">
+          <div class="link-name">&#128273; This admin link</div>
+          <div class="link-url" id="admin-admin-url"></div>
+        </div>
+        <button class="copy-btn" id="admin-copy-admin">Copy</button>
+      </div>
+
+      <h2 style="margin-top:28px">Everything on the card</h2>
+      <p class="hint">Remove anything that shouldn&rsquo;t be there — this can&rsquo;t be undone.</p>
+      <div class="admin-entries" id="admin-entries"></div>
+
+      <h2 style="margin-top:28px">Danger zone</h2>
+      <button class="btn btn-danger btn-small" id="admin-delete-card">Delete this whole card</button>
+    </section>
+
+    <!-- The book -->
+    <section class="book-stage hidden" id="book-stage">
+      <div class="book" id="book"></div>
+      <div class="book-controls no-print">
+        <button class="nav-btn" id="prev-btn" aria-label="Previous page">&#8592;</button>
+        <span class="page-indicator" id="page-indicator"></span>
+        <button class="nav-btn" id="next-btn" aria-label="Next page">&#8594;</button>
+      </div>
+      <div class="view-toolbar no-print">
+        <p class="hint spot-hint">Tap a <strong>+</strong> spot on any page to add a note, photo, GIF or doodle.</p>
+        <button class="btn btn-quiet btn-small" id="print-btn">Download PDF</button>
+        <button class="btn btn-quiet btn-small" id="booklet-btn">Print booklet</button>
+      </div>
+    </section>
+
+    <p class="footer-note no-print"><a href="./">All cards</a> &mdash; <a href="new">make a card like this</a> &mdash; free, for friends</p>
+  </main>
+
+  <!-- Booklet print instructions -->
+  <div class="modal-backdrop hidden" id="booklet-modal">
+    <div class="modal booklet-modal">
+      <h3>Print a foldable booklet</h3>
+      <p class="hint">Print <strong>double-sided</strong>, flipping on the <strong>short edge</strong>. Then fold the whole stack in half &mdash; the pages come out in order, like a little book.</p>
+      <div class="modal-actions">
+        <button class="btn btn-quiet" id="booklet-cancel" type="button">Cancel</button>
+        <button class="btn" id="booklet-print" type="button">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Composer modal: opened by tapping an empty spot -->
+  <div class="modal-backdrop hidden" id="composer-modal">
+    <div class="modal composer">
+      <h3 id="composer-heading">Add to this page</h3>
+
+      <div class="field">
+        <label for="composer-name">Your name</label>
+        <input type="text" id="composer-name" maxlength="120" placeholder="Aunt Maya" autocomplete="name">
+      </div>
+
+      <div class="composer-tabs" id="composer-tabs">
+        <button class="chip active" data-kind="text" type="button">&#9997;&#65039; Note</button>
+        <button class="chip" data-kind="photo" type="button">&#128247; Photo</button>
+        <button class="chip" data-kind="gif" type="button">GIF</button>
+        <button class="chip" data-kind="doodle" type="button">&#9999;&#65039; Doodle</button>
+      </div>
+
+      <div class="field hidden" id="size-field">
+        <label>Size</label>
+        <div class="choice-row" id="size-row">
+          <button class="chip active" data-size="1" type="button">Quarter</button>
+          <button class="chip" data-size="2" type="button">Half page</button>
+          <button class="chip" data-size="4" type="button">Full page</button>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div class="composer-pane" id="pane-text">
+        <div class="field">
+          <label for="composer-message">Your message</label>
+          <textarea id="composer-message" maxlength="5000" placeholder="Dear friend, remember that time we…"></textarea>
+        </div>
+        <div class="field">
+          <label>Handwriting</label>
+          <div class="choice-row" id="font-row"></div>
+        </div>
+        <div class="field">
+          <label>Ink</label>
+          <div class="swatch-row" id="color-row"></div>
+        </div>
+        <div class="composer-preview" id="text-preview"></div>
+      </div>
+
+      <!-- Photo -->
+      <div class="composer-pane hidden" id="pane-photo">
+        <input type="file" id="photo-input" accept="image/*" hidden>
+        <button class="btn btn-quiet" id="photo-pick" type="button">Choose a photo</button>
+        <div class="composer-preview hidden" id="photo-preview">
+          <div class="preview-tile" id="photo-preview-tile"></div>
+          <button class="media-remove" id="photo-remove" type="button" aria-label="Remove photo">&#10005;</button>
+        </div>
+      </div>
+
+      <!-- GIF -->
+      <div class="composer-pane hidden" id="pane-gif">
+        <div class="gif-search-row">
+          <input type="text" id="gif-query" placeholder="Search GIFs (confetti, high five…)" autocomplete="off">
+          <button class="btn btn-quiet btn-small" id="gif-search-btn" type="button">Search</button>
+        </div>
+        <div class="gif-grid" id="gif-grid"></div>
+        <div class="field" style="margin-top:12px;margin-bottom:0">
+          <label for="gif-url-input" style="font-weight:400;font-size:0.86rem;color:var(--ink-soft)">Or paste a GIF link from Giphy or Tenor (it should end in .gif)</label>
+          <input type="text" id="gif-url-input" placeholder="https://media.giphy.com/…/giphy.gif" autocomplete="off">
+        </div>
+        <div class="composer-preview hidden" id="gif-preview">
+          <div class="preview-tile" id="gif-preview-tile"></div>
+          <button class="media-remove" id="gif-remove" type="button" aria-label="Remove GIF">&#10005;</button>
+        </div>
+      </div>
+
+      <!-- Doodle -->
+      <div class="composer-pane hidden" id="pane-doodle">
+        <div class="doodle-canvas-wrap">
+          <canvas id="doodle-canvas" width="800" height="600"></canvas>
+        </div>
+        <div class="doodle-toolbar">
+          <div class="swatch-row" id="doodle-colors"></div>
+          <button class="stroke-btn" id="stroke-thin" type="button" aria-label="Thin pen"><span class="stroke-dot thin"></span></button>
+          <button class="stroke-btn" id="stroke-thick" type="button" aria-label="Thick pen"><span class="stroke-dot thick"></span></button>
+          <span class="spacer"></span>
+          <button class="btn btn-quiet btn-small" id="doodle-undo" type="button">Undo</button>
+          <button class="btn btn-quiet btn-small" id="doodle-clear" type="button">Clear</button>
+        </div>
+      </div>
+
+      <div class="error-msg hidden" id="composer-error"></div>
+      <div class="modal-actions">
+        <button class="btn btn-quiet" id="composer-cancel" type="button">Cancel</button>
+        <button class="btn" id="composer-save" type="button">Put it on the page</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
