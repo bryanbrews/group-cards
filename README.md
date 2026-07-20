@@ -4,6 +4,8 @@
 
 A self-hosted group greeting card app built on Cloudflare Pages + D1. Everyone signs the same card — handwritten notes, photos, doodles, and GIFs — and the recipient gets a little flip-book to open.
 
+![Screenshot](docs/screenshot.png)
+
 ## Features
 
 - **Flip-book viewer** — animated page-turn on desktop, swipe on mobile
